@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Network Forensics Report - Emotet Infection</title>
+  <title>DFIR Final Exam: Network and Memory Forensics</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,13 +21,24 @@
     h1, h2, h3 {
       color: #2c3e50;
     }
-    section {
+    .blog-title {
+      background-color: #2c3e50;
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 6px;
+      margin: 3rem auto 1rem;
+      max-width: 900px;
+    }
+    section.blog {
       background: #fff;
-      margin: 2rem auto;
+      margin: 1rem auto 3rem;
       padding: 2rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       max-width: 900px;
+    }
+    section.blog h2 {
+      margin-top: 2rem;
     }
     table {
       width: 100%;
@@ -63,9 +73,13 @@
 </head>
 <body>
   <header>
-    <h1>Network Forensics Investigation: Emotet Infection with Cobalt Strike Activity</h1>
-    <p><strong>Author:</strong> Diego Alexander Rivera Acosta | <strong>Date:</strong> June 2025</p>
+    <h1>DFIR Final Exam: Network and Memory Forensics</h1>
+    <p><strong>Author:</strong> Diego Alexander Rivera Acosta | <strong>Course:</strong> CSCO1040 | <strong>Date:</strong> June 2025</p>
   </header>
+
+  <div class="blog-title"><h2 style="color: #fff !important;">🧠 Blog Post #1: Network Forensics - Emotet & Cobalt Strike</h2></div>
+  <section class="blog blog1">
+
   
   <section>
     <h2>Objective</h2>
@@ -97,26 +111,26 @@
   <section>
     <h2>Indicators of Compromise (IOCs)</h2>
     <table>
-      <tr><th>IOC</th><th>Type</th><th>Description</th></tr>
+      <tbody><tr><th>IOC</th><th>Type</th><th>Description</th></tr>
       <tr><td>103.98.188.50</td><td>IP Address</td><td>Malicious HTML dropper server</td></tr>
       <tr><td>vibesapparels.com</td><td>Domain</td><td>Delivered index[1].html</td></tr>
       <tr><td>173.249.25.219</td><td>IP Address</td><td>C2 server (TLS communication)</td></tr>
       <tr><td>10.0.0.115</td><td>IP Address</td><td>Infected workstation</td></tr>
       <tr><td>10.0.0.10</td><td>IP Address</td><td>Fake internal DNS/LDAP server</td></tr>
       <tr><td>JA3: a0e5fd64349b1319b7f818f1af2e</td><td>JA3 Hash</td><td>Fake Firefox update</td></tr>
-    </table>
+    </tbody></table>
   </section>
 
   <section>
     <h2>Timeline of Events</h2>
     <table>
-      <tr><th>Time (UTC)</th><th>Event</th></tr>
+      <tbody><tr><th>Time (UTC)</th><th>Event</th></tr>
       <tr><td>14:29:14</td><td>HTTP GET to /dQa/Qzuqq5TZO/ from 103.98.188.50</td></tr>
       <tr><td>14:31:50</td><td>DNS hijack via internal server 10.0.0.10</td></tr>
       <tr><td>14:58:41</td><td>LDAP session to 10.0.0.10</td></tr>
       <tr><td>14:59:08</td><td>Connection to 10.0.0.10:49672</td></tr>
       <tr><td>~248s</td><td>TLS connection attempt to 173.249.25.219 (C2)</td></tr>
-    </table>
+    </tbody></table>
   </section>
 
   <section>
@@ -169,5 +183,90 @@
       <li>Use JA3 fingerprints to detect stealthy malware over TLS</li>
     </ul>
   </section>
+  </section>
+
+  <div class="blog-title"><h2 style="color: #fff !important;">💾 Blog Post #2: Memory Forensics - Windows 10 Dump Analysis</h2></div>
+  <section class="blog blog2">
+
+  <section>
+    <h2>Objective</h2>
+    <p>This investigation involved acquiring and analyzing a memory dump from a clean Windows 10 system to simulate a baseline forensic review using Volatility 3. The objective was to examine standard memory artifacts such as active processes, registry hives, DLLs, and network activity to understand normal system behavior.</p>
+  </section>
+
+  <section>
+    <h2>Tools Used</h2>
+    <ul>
+      <li><strong>WinPMEM</strong> – Memory acquisition</li>
+      <li><strong>Volatility 3</strong> – Memory analysis</li>
+      <li><strong>FlareVM</strong> – Analysis environment</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Step-by-Step Process</h2>
+    <ol>
+      <li>Take snapshot of VM to preserve state</li>
+      <li>Run WinPMEM to generate memory.raw</li>
+      <li>Transfer raw file to FlareVM for analysis</li>
+      <li>Use Volatility 3 to extract forensic artifacts</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Screenshots</h2>
+    <img src="blog2_img0.png" alt="WinPMEM start" class="screenshot">
+    <p class="img-caption">Figure 1: WinPMEM started from command line</p>
+
+    <img src="blog2_img1.png" alt="Memory Dump in Progress" class="screenshot">
+    <p class="img-caption">Figure 2: Memory dump in progress showing memory ranges</p>
+
+    <img src="blog2_img2.png" alt="Dump File Created" class="screenshot">
+    <p class="img-caption">Figure 3: memory.raw successfully created in Downloads</p>
+
+    <img src="blog2_img3.png" alt="Volatility pslist output" class="screenshot">
+    <p class="img-caption">Figure 4: Volatility pslist output listing active processes</p>
+
+    <img src="blog2_img4.png" alt="Volatility dlllist output" class="screenshot">
+    <p class="img-caption">Figure 5: Volatility dlllist output showing loaded DLLs</p>
+
+    <img src="blog2_img5.png" alt="Volatility netscan output" class="screenshot">
+    <p class="img-caption">Figure 6: Volatility netscan output showing open ports and remote IPs</p>
+
+    <img src="blog2_img6.png" alt="Volatility registry hivelist output" class="screenshot">
+    <p class="img-caption">Figure 7: Volatility hivelist output showing registry hives</p>
+  </section>
+
+  <section>
+    <h2>Indicators of Compromise (IOCs)</h2>
+    <p>No indicators of compromise were found. All observed behavior and system artifacts aligned with normal Windows 10 operations.</p>
+  </section>
+
+  <section>
+    <h2>Timeline of Events</h2>
+    <table>
+      <tr><th>Time (approx.)</th><th>Event</th></tr>
+      <tr><td>03:00 AM</td><td>Snapshot created and WinPMEM launched</td></tr>
+      <tr><td>03:02 AM</td><td>Memory dump completed</td></tr>
+      <tr><td>03:10 AM</td><td>Volatility 3 analysis started</td></tr>
+      <tr><td>03:30 AM</td><td>Artifacts extracted and screenshots taken</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Conclusion</h2>
+    <p>This blog confirmed a baseline forensic profile of a clean Windows 10 environment. Tools like WinPMEM and Volatility 3 allowed us to validate the presence of core system processes, libraries, and expected registry structures with no indication of compromise.</p>
+  </section>
+
+  <section>
+    <h2>Lessons Learned</h2>
+    <ul>
+      <li>Memory acquisition should always be performed from a trusted state (via snapshot)</li>
+      <li>Volatility 3 provides powerful plugin support for deep Windows memory inspection</li>
+      <li>Knowing what 'normal' looks like is key for identifying anomalies later</li>
+    </ul>
+  </section>
+
+  </section>
+
 </body>
 </html>
