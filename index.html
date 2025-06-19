@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Forensics Report - Emotet Infection</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0 2rem;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    section {
+      background: #fff;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 900px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    img.screenshot {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 1.5rem auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .img-caption {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: -1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Network Forensics Investigation: Emotet Infection with Cobalt Strike Activity</h1>
+    <p><strong>Author:</strong> Diego Alexander Rivera Acosta | <strong>Date:</strong> June 2025</p>
+  </header>
+  
+  <section>
+    <h2>Objective</h2>
+    <p>The goal of this investigation was to analyze a packet capture (PCAP) file using NetworkMiner and Wireshark to identify signs of malware infection. The PCAP file used is titled: <em>2022-06-07-Emotet-epoch5-infection-with-Cobalt-Strike-and-spambot-activity.pcap</em>, sourced from <a href="https://www.malware-traffic-analysis.net/">malware-traffic-analysis.net</a>. The objective was to reconstruct the attack, identify Indicators of Compromise (IOCs), and build a timeline of events.</p>
+  </section>
+
+  <section>
+    <h2>Tools Used</h2>
+    <ul>
+      <li><strong>NetworkMiner</strong> – Host and file reconstruction, DNS queries, JA3 fingerprints, sessions</li>
+      <li><strong>Wireshark</strong> – Packet-level inspection, filtering, TCP stream analysis</li>
+      <li><strong>VirusTotal</strong> – IOC reputation checking</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Step-by-Step Process</h2>
+    <ol>
+      <li>Download PCAP file from malware-traffic-analysis.net</li>
+      <li>Open the file with NetworkMiner</li>
+      <li>Identify infected host and analyze extracted data</li>
+      <li>Switch to Wireshark for protocol-level inspection</li>
+      <li>Filter suspicious traffic (HTTP, DNS, LDAP, custom ports)</li>
+      <li>Verify IPs and domains on VirusTotal</li>
+      <li>Build a timeline and list of IOCs</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Indicators of Compromise (IOCs)</h2>
+    <table>
+      <tr><th>IOC</th><th>Type</th><th>Description</th></tr>
+      <tr><td>103.98.188.50</td><td>IP Address</td><td>Malicious HTML dropper server</td></tr>
+      <tr><td>vibesapparels.com</td><td>Domain</td><td>Delivered index[1].html</td></tr>
+      <tr><td>173.249.25.219</td><td>IP Address</td><td>C2 server (TLS communication)</td></tr>
+      <tr><td>10.0.0.115</td><td>IP Address</td><td>Infected workstation</td></tr>
+      <tr><td>10.0.0.10</td><td>IP Address</td><td>Fake internal DNS/LDAP server</td></tr>
+      <tr><td>JA3: a0e5fd64349b1319b7f818f1af2e</td><td>JA3 Hash</td><td>Fake Firefox update</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Timeline of Events</h2>
+    <table>
+      <tr><th>Time (UTC)</th><th>Event</th></tr>
+      <tr><td>14:29:14</td><td>HTTP GET to /dQa/Qzuqq5TZO/ from 103.98.188.50</td></tr>
+      <tr><td>14:31:50</td><td>DNS hijack via internal server 10.0.0.10</td></tr>
+      <tr><td>14:58:41</td><td>LDAP session to 10.0.0.10</td></tr>
+      <tr><td>14:59:08</td><td>Connection to 10.0.0.10:49672</td></tr>
+      <tr><td>~248s</td><td>TLS connection attempt to 173.249.25.219 (C2)</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Screenshots</h2>
+    <img src="images/http-request-vibesapparels.png" alt="HTTP request to vibesapparels.com" class="screenshot">
+    <p class="img-caption">Figure 1: HTTP GET request for the dropper HTML</p>
+
+    <img src="images/dns-hijack-microsoft.png" alt="DNS Hijacking" class="screenshot">
+    <p class="img-caption">Figure 2: Internal DNS server responds to Microsoft query</p>
+
+    <img src="images/ldap-traffic-cryptopunch.png" alt="LDAP session" class="screenshot">
+    <p class="img-caption">Figure 3: LDAP traffic to internal fake domain controller</p>
+
+    <img src="images/c2-connection-port49672.png" alt="C2 connection on high port" class="screenshot">
+    <p class="img-caption">Figure 4: Lateral or C2 movement via non-standard port</p>
+
+    <img src="images/ja3-tls-handshake.png" alt="JA3 fingerprint" class="screenshot">
+    <p class="img-caption">Figure 5: Suspicious TLS JA3 fingerprint observed</p>
+  </section>
+
+  <section>
+    <h2>Conclusion</h2>
+    <p>This investigation confirms that host <strong>10.0.0.115</strong> was infected with malware, initiating an infection chain involving a malicious HTML dropper, DNS hijacking, LDAP reconnaissance, and encrypted C2 communication. Two external IPs were confirmed malicious through VirusTotal analysis. Tools like NetworkMiner and Wireshark played critical roles in reconstructing the attack chain and identifying key indicators.</p>
+  </section>
+
+  <section>
+    <h2>Lessons Learned</h2>
+    <ul>
+      <li>Monitor outbound HTTP/HTTPS traffic to unknown IPs</li>
+      <li>DNS resolution paths can reveal hijacking or redirection</li>
+      <li>Even failed connections (like 509 errors or RSTs) matter</li>
+      <li>Use JA3 fingerprints to detect stealthy malware over TLS</li>
+    </ul>
+  </section>
+</body>
+</html>
